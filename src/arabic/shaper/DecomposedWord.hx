@@ -1,4 +1,7 @@
-package ;
+package arabic.shaper ;
+using unifill.Unifill;
+import unifill.CodePoint;
+import haxe.Utf8;
 
 /**
  * ...
@@ -49,14 +52,14 @@ class DecomposedWord
 	function get_reshaped_word(unshaped_word:String):String
 	{
 		
-	var unshaped_word:String = ArabicReshaper.replace_jalalah(unshaped_word);
-	unshaped_word = ArabicReshaper.replace_lam_alef(unshaped_word);
-	var decomposed_word:DecomposedWord = new DecomposedWord(unshaped_word);
-	var result:String = "";
-	if (decomposed_word.stripped_regular_letters.length> 0)
-		result = reshape_it(decomposed_word.stripped_regular_letters.join(""));
-	
-		return decomposed_word.reconstruct_word(result);
+		var unshaped_word:String = ArabicReshaper.replace_jalalah(unshaped_word);
+		unshaped_word = ArabicReshaper.replace_lam_alef(unshaped_word);
+		var decomposed_word:DecomposedWord = new DecomposedWord(unshaped_word);
+		var result:String = "";
+		if (decomposed_word.stripped_regular_letters.length> 0)
+			result = reshape_it(decomposed_word.stripped_regular_letters.join(""));
+		
+			return decomposed_word.reconstruct_word(result);
 	}
 		
 	
@@ -97,8 +100,8 @@ class DecomposedWord
 	}
 	
 	function is_arabic_character(target:String):Bool
-	{
-		return ArabicReshaper.ARABIC_GLYPHS.exists(target) || ArabicReshaper.HARAKAT.indexOf(target) != -1;
+	{	
+		return ((ArabicReshaper.ARABIC_GLYPHS.exists(target) || ArabicReshaper.HARAKAT.indexOf(target) != -1));	
 	}
 	
 	function get_words(sentence:String):Array<String>
@@ -112,15 +115,16 @@ class DecomposedWord
 	
 	function has_arabic_letters(word:String):Bool
 	{
-		for (c in 0...word.length)
-			if (is_arabic_character(word.charAt(c)))
+		
+		for (c in 0...word.uLength() )
+			if (is_arabic_character(word.uCharAt(c)))
 		return true;
 		return false;
 	}
 	function is_arabic_word(word:String):Bool
 	{
-	for (c in 0...word.length)
-		if (!is_arabic_character(word.charAt(c)))
+	for (c in 0...word.uLength())
+		if (!is_arabic_character(word.uCharAt(c)))
 			return false;
 		return true;
 	}
@@ -130,12 +134,13 @@ class DecomposedWord
 	{
 		var temp_word:String = "";
 		var words:Array<String> = [];
-		for (c in 0...word.length)
+		for (c in 0...word.uLength())
 		{
-			var cc:String = word.charAt(c);
+			var cc:String = word.uCharAt(c);
+			
 			if (is_arabic_character(cc))
 			{
-				if (temp_word.length> 0 && ! is_arabic_word(temp_word)){
+				if (temp_word.uLength()> 0 && ! is_arabic_word(temp_word)){
 					words.push(temp_word);
 					temp_word = cc;
 				}
@@ -144,7 +149,7 @@ class DecomposedWord
 			}
 			else
 			{
-				if (temp_word.length > 0 && is_arabic_word(temp_word))
+				if (temp_word.uLength() > 0 && is_arabic_word(temp_word))
 				{
 					words.push(temp_word);
 					temp_word = cc;
@@ -153,10 +158,16 @@ class DecomposedWord
 					temp_word += cc;
 			}
 		}
-		if (temp_word.length> 0)
+		if (temp_word.uLength()> 0)
 			words.push(temp_word);
 		return words;
 	}
+	
+	function reverse(s:String):String {
+        var a = s.split('');
+        a.reverse();
+        return a.join('');
+    }
 	
 	public function reshape(text:String):String
 	{
@@ -168,30 +179,28 @@ class DecomposedWord
 			for (i in 0...lines.length)
 				lines[i] = reshape_sentence(lines[i]);
 				
-				
-			// REVERSE
 			var reshaped_text:String = lines.join('\n');
-			var result:String = "";
-			for (i in 0...reshaped_text.length)
-			{
-				result = reshaped_text.charAt(i) + result;
-				
-			}
-		
-			return result;
+			// REVERSE
+			return reverse(reshaped_text);
+			
 		}
 		
 		return "";
 	}
 	function reshape_sentence(sentence:String):String
 	{
+		
 		var words:Array<String> = get_words(sentence);
 		for (i in 0...words.length)
 		{
 			var word:String = words[i];
+			
 			if (has_arabic_letters(word))
+			{
 				if (is_arabic_word(word))
+				{
 					words[i] = get_reshaped_word(word);
+				}
 				else
 				{
 					var mixed_words:Array<String> = get_words_from_mixed_word(word);
@@ -199,6 +208,7 @@ class DecomposedWord
 						mixed_words[j] = get_reshaped_word(mixed_words[j]);
 					words[i] = mixed_words.join("");
 				}
+			}
 		}
 		return words.join(" ");
 	}

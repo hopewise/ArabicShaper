@@ -3,7 +3,7 @@
 	<!-- NMML reference: https://gist.github.com/1763850 -->
 	
 	<!-- metadata, make sure 'package' is at least 3 segments (ie. com.mycompany.myproject) -->
-	<meta title="ArabicShaper" package="ArabicShaper" version="1.0.0" company="Samir Sabri" />
+	<meta title="ArabicShaper" package="com.ArabicShaper" version="1.0.0" company="Samir Sabri" />
 	
 	<!-- output -->
 	<app main="Main" file="ArabicShaper" path="bin" />
@@ -17,10 +17,12 @@
 	<source path="src" />
 	<haxelib name="openfl" />
 	<haxelib name="actuate" />
+	<haxelib name="unifill" />
 	
 	<!-- assets -->
 	<icon path="assets/openfl.svg" />
 	<assets path="assets/fonts" rename="fonts" />
+	<assets path="assets/tests" rename="tests" />
 	
 	
 	<!-- optimize output

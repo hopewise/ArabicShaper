@@ -1,4 +1,4 @@
-package ;
+package arabic.shaper ;
 
 /**
  * ...
@@ -151,6 +151,7 @@ class ArabicReshaper
 	
 	public static function get_reshaped_glyph(target, location):Dynamic
 	{
+		
 		if (ARABIC_GLYPHS.exists(target))
 		return ARABIC_GLYPHS.get(target)[location];
 		else

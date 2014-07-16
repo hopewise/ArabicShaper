@@ -1,10 +1,16 @@
 package ;
 
+using unifill.Unifill;
+import unifill.CodePoint;
+
+import arabic.shaper.ArabicReshaper;
+import arabic.shaper.DecomposedWord;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.Lib;
 import flash.text.TextField;
 import flash.text.TextFormat;
+import haxe.Utf8;
 import openfl.Assets;
 
 /**
@@ -39,27 +45,26 @@ class Main extends Sprite
 		
 		var arabic_reshaper:DecomposedWord = new DecomposedWord("", true);
 		ArabicReshaper.init();
-
+		
 		var reshaped_text:String = arabic_reshaper.reshape('الحمد لله رب العالمين');
-		
-		
-		
-		trace (reshaped_text.split(""));
 		
 		var field:TextField = new TextField();
 		field.embedFonts = true;
 		
 		var name_of_your_crazy_font:String = Assets.getFont("fonts/trado.ttf").fontName;
+		//var name_of_your_crazy_font:String = Assets.getFont("tests/Arabic-font-2013.ttf").fontName;
+		//var name_of_your_crazy_font:String = Assets.getFont("tests/BPG_Glaho_Aial.ttf").fontName;
+		
+		//trace ('ه'.uCodePointAt(0).toInt());
 		
 		
 		
-		
-		
-		field.defaultTextFormat = new TextFormat(name_of_your_crazy_font, 50, 0xff0000);
+		field.defaultTextFormat = new TextFormat(name_of_your_crazy_font, 70, 0xff0000);
 		//field.border = true;
 		field.text = reshaped_text;
-		field.defaultTextFormat = new TextFormat(name_of_your_crazy_font, 50, 0xff0000);
-		field.width = 1000;
+		field.defaultTextFormat = new TextFormat(name_of_your_crazy_font, 70, 0xff0000);
+		field.width = 3000;
+		field.height = 2000;
 		//field.selectable = false;
 		addChild(field);
 		
